@@ -3,7 +3,7 @@
 
 # Object File 
 *.o
-*.s
+#*.s
 *.coff
 
 # Binary 
@@ -11,6 +11,6 @@ nachos
 coff2noff
 
 # test folder
-/code/test/*.c
-/code/test/*
-/code/test/halt
+#/code/test/*.c
+#/code/test/*
+#/code/test/halt
