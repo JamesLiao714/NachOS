@@ -68,28 +68,4 @@ void Alarm::WaitUntil(int x) {
     //開中斷
     kernel->interrupt->SetLevel(oldLevel);
 }
-bool sleepList::IsEmpty() {
-    return _threadlist.size() == 0;
-}
-void sleepList::PutToSleep(Thread*t, int x) {
-    ASSERT(kernel->interrupt->getLevel() == IntOff);
-    _threadlist.push_back(sleepThread(t, _current_interrupt + x));
-    t->Sleep(false);
-}
-bool sleepList::PutToReady() {
-    bool woken = false;
-    _current_interrupt ++;
-    for(std::list<sleepThread>::iterator it = _threadlist.begin();
-        it != _threadlist.end(); ) {
-        if(_current_interrupt >= it->when) {
-            woken = true;
-            cout << "sleepList::PutToReady Thread woken" << endl;
-            kernel->scheduler->ReadyToRun(it->sleeper);
-            it = _threadlist.erase(it);
-        } else {
-            it++;
-        }
-    }
-    return woken;
-}
 

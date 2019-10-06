@@ -23,8 +23,8 @@
 #include "timer.h"
 #include <list>
 #include "thread.h"
-
-class sleepList {
+#include "scheduler.h"
+/*class sleepList {
     public:
         sleepList():_current_interrupt(0) {};
         void PutToSleep(Thread *t, int x);
@@ -40,7 +40,7 @@ class sleepList {
         };
     int _current_interrupt;
     std::list<sleepThread> _threadlist;
-};
+};*/
 
 // The following class defines a software alarm clock. 
 class Alarm : public CallBackObj {
