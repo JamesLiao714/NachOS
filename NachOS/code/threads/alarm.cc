@@ -62,7 +62,7 @@ void Alarm::CallBack() {
 
 void Alarm::WaitUntil(int x) {
     //關中斷
-    IntStatus oldLevel = kernel->interrupt->SetLevel(IntOff); //save the olad level of interrupt
+    IntStatus oldLevel = kernel->interrupt->SetLevel(IntOff); 
     Thread* t = kernel->currentThread;
     cout << "proceesing Alarm::WaitUntil --- sleeping " << endl;
     _sleepList.PutToSleep(t, x); //scheduler
