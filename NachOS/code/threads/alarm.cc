@@ -50,21 +50,22 @@ void Alarm::CallBack() {
     Interrupt *interrupt = kernel->interrupt;
     MachineStatus status = interrupt->getStatus();
     bool woken = _sleepList.PutToReady();
-    //如果沒有程式需要計數了，就把時脈中斷遮蔽掉
+    //如果沒有程式需要計數了，就把interrupt遮蔽掉
     if (status == IdleMode && !woken && _sleepList.IsEmpty()) {// is it time to quit?
         if (!interrupt->AnyFutureInterrupts()) {
-            timer->Disable();   // turn off the timer
+            timer->Disable();   // shut down the timer
         }
     } else {                    // there's someone to preempt
         interrupt->YieldOnReturn();
     }
 }
+
 void Alarm::WaitUntil(int x) {
     //關中斷
-    IntStatus oldLevel = kernel->interrupt->SetLevel(IntOff);
+    IntStatus oldLevel = kernel->interrupt->SetLevel(IntOff); //save the olad level of interrupt
     Thread* t = kernel->currentThread;
-    cout << "Alarm::WaitUntil go sleep" << endl;
-    _sleepList.PutToSleep(t, x);
+    cout << "proceesing Alarm::WaitUntil --- sleeping " << endl;
+    _sleepList.PutToSleep(t, x); //scheduler
     //開中斷
     kernel->interrupt->SetLevel(oldLevel);
 }
