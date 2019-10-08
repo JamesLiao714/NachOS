@@ -190,7 +190,7 @@ bool sleepList::IsEmpty() {
 }
 void sleepList::PutToSleep(Thread*t, int x) {
     ASSERT(kernel->interrupt->getLevel() == IntOff);
-    _threadlist.push_back(sleepThread(t, _current_interrupt + x));
+    _threadlist.push_back(sleepThread(t, _current_interrupt + x)); //each increment will take 1 ms
     t->Sleep(false);
 }
 bool sleepList::PutToReady() {
