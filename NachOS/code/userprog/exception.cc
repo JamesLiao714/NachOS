@@ -65,10 +65,11 @@ ExceptionHandler(ExceptionType which)
 			val=kernel->machine->ReadRegister(4);
 			cout << "Print integer:" <<val << endl;
 			return;
+		//implementation of sleep(HW1)
 		case SC_Sleep:
-			val = kernel->machine->ReadRegister(4);
-			cout << "sleep Time:" <<val << "/ms" <<endl;
-			kernel->alarm->WaitUntil(val);
+			val = kernel->machine->ReadRegister(4); //read val
+			cout << "Sleep Time:" << val << "(/ms) Ready to activate - at exception.cc " << endl;
+			kernel-> alarm-> WaitUntil(val); //activation of sleep func.
 			return;
 
 /*		case SC_Exec:
