@@ -23,7 +23,7 @@
 #include "timer.h"
 #include <list>
 #include "thread.h"
-#include "scheduler.h"
+#include "Scheduler.h"
 /*class sleepList {
     public:
         sleepList():_current_interrupt(0) {};
