@@ -1,0 +1,16 @@
+# Desktop Services Store
+*.DS_Store
+
+# Object File 
+*.o
+#*.s
+*.coff
+
+# Binary 
+nachos
+coff2noff
+
+# test folder
+#/code/test/*.c
+#/code/test/*
+#/code/test/halt
