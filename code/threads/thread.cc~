@@ -44,7 +44,7 @@ Thread::Thread(char* threadName)
 
     status = JUST_CREATED;
 
-    priority = (rand()%50);
+ 
 
     Thread_Time = 0;          // Nachos may run other unknown threads , we set it to zero so that there is no problem to run SJF scheduling.
 

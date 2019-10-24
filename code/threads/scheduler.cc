@@ -22,7 +22,13 @@
 #include "debug.h"
 #include "scheduler.h"
 #include "main.h"
-
+int cmpPriority(Thread* thd1, Thread* thd2)
+{
+    if(thd1->getPriority()<thd2->getPriority())
+	return -1;
+    else	
+	return 0;
+}
 //----------------------------------------------------------------------
 // Scheduler::Scheduler
 // 	Initialize the list of ready but not running threads.
@@ -32,7 +38,7 @@
 Scheduler::Scheduler()
 {
 //	schedulerType = type;
-	readyList = new List<Thread *>; 
+	readyList = new SortedList<Thread *>(cmpPriority); 
 	toBeDestroyed = NULL;
 } 
 
@@ -61,7 +67,8 @@ Scheduler::ReadyToRun (Thread *thread)
     DEBUG(dbgThread, "Putting thread on ready list: " << thread->getName());
 
     thread->setStatus(READY);
-    readyList->Append(thread);
+    readyList->Insert(thread);
+    cout << "Thread's name: " << thread->getName()<< "priority: " <<thread->getPriority()<<endl;
 }
 
 //----------------------------------------------------------------------
@@ -105,7 +112,7 @@ void
 Scheduler::Run (Thread *nextThread, bool finishing)
 {
     Thread *oldThread = kernel->currentThread;
- 
+    cout << "current thread priority: " << oldThread->getPriority() <<"next thread priority: " << nextThread->getPriority()<<endl;
 //	cout << "Current Thread" <<oldThread->getName() << "    Next Thread"<<nextThread->getName()<<endl;
    
     ASSERT(kernel->interrupt->getLevel() == IntOff);

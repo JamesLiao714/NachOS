@@ -26,10 +26,18 @@
 //----------------------------------------------------------------------
 
 template <class T>
-ListElement<T>::ListElement(T itm)
+ListElement<T>::ListElement(T itm, int k)
 {
      item = itm;
      next = NULL;	// always initialize to something!
+     key = k;
+}
+
+template <class T>
+ListElement<T>::ListElement(T itm)
+{
+	item = itm;
+	next = NULL;
 }
 
 
@@ -344,6 +352,68 @@ SortedList<T>::SanityCheck() const
     }
 }
 
+
+//   Insertion Sort
+
+template <class T>
+
+void
+
+List<T>::SortedInsert(T item , int sortKey)
+
+{
+
+ 
+
+    ListElement<T> *element = new ListElement<T>(item,sortKey);
+
+    ListElement<T> *ptr;           // keep track
+
+ 
+
+    //ASSERT(!IsInList(item));
+
+    if (IsEmpty()) {                // if list is empty, put at front
+
+        first = element;
+
+        last = element;
+
+    } else if (sortKey < first->key) {  // item goes at front
+
+      element->next = first;
+
+      first = element;
+
+    } else {           // look for first elt in list bigger than item
+
+        for (ptr = first; ptr->next != NULL; ptr = ptr->next) {
+
+            if (sortKey<ptr->next->key) {
+
+             element->next = ptr->next;
+
+              ptr->next = element;
+
+             numInList++;
+
+             return;
+
+          }
+
+      }
+
+      last->next = element;           // item goes at end of list
+
+      last = element;
+
+    }
+
+    numInList++;
+
+    ASSERT(IsInList(item));
+
+}
 //----------------------------------------------------------------------
 // SortedList::SelfTest
 //      Test whether this module is working.

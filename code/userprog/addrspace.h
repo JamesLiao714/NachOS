@@ -26,7 +26,7 @@ class AddrSpace {
 
     void Execute(char *fileName);	// Run the the program
 					// stored in the file "executable"
-
+    static bool usedPhyPage[NumPhysPages];
     void SaveState();			// Save/restore address space-specific
     void RestoreState();		// info on a context switch 
 

@@ -86,7 +86,7 @@ class Thread {
   public:
 
     int priority; //used to save prio
-    int getPriority(){return priority;}
+    int getPriority(){return priority;};
 
     int  getburst(){return burst;};
     Thread(char* debugName);		// initialize a Thread 
