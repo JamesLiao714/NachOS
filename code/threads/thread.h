@@ -83,12 +83,17 @@ class Thread {
     int *stackTop;			 // the current stack pointer
     void *machineState[MachineStateSize];  // all registers except for stackTop
     int burst;
+    int priority; //used to save priority
+    int startTime;
   public:
-
-    int priority; //used to save prio
+    
+    void setStartTime(int t)	{startTime = t;}
+    int getStartTime()		{return startTime;}
     int getPriority(){return priority;}
-
-    int  getburst(){return burst;};
+    void setPriority(int p){priority = p;}
+    int  getBurstTime(){return burst;}
+    void setBurstTime(int b){burst = b;}
+    static void SchedulingTest();
     Thread(char* debugName);		// initialize a Thread 
     Thread(char* debugName, int t);
     ~Thread(); 				// deallocate a Thread

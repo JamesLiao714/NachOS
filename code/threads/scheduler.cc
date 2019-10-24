@@ -29,6 +29,15 @@ int cmpPriority(Thread* thd1, Thread* thd2)
     else	
 	return 0;
 }
+int cmpSJF(Thread* a, Thread* b)
+{
+    if(a -> getBurstTime() == b->getBurstTime())
+	return 0;
+    return a -> getBurstTime() > b->getBurstTime() ? 1: -1;
+}
+int cmpFIFO(Thread *a, Thread *b) {
+    return 1;
+}
 //----------------------------------------------------------------------
 // Scheduler::Scheduler
 // 	Initialize the list of ready but not running threads.
@@ -37,10 +46,28 @@ int cmpPriority(Thread* thd1, Thread* thd2)
 
 Scheduler::Scheduler()
 {
-//	schedulerType = type;
-	readyList = new SortedList<Thread *>(cmpPriority); 
-	toBeDestroyed = NULL;
+	Scheduler(RR);
 } 
+//
+Scheduler::Scheduler(SchedulerType type)
+{
+    schedulerType = type;
+    switch(schedulerType) {
+    case RR:
+        readyList = new SortedList<Thread *>(0);
+        break;
+    case SJF:
+        readyList = new SortedList<Thread *>(cmpSJF);
+        break;
+    case Priority:
+        readyList = new SortedList<Thread *>(cmpPriority);
+        break;
+    case FIFO:
+        readyList = new SortedList<Thread *>(cmpFIFO);
+    }
+    toBeDestroyed = NULL;
+} 
+
 
 //----------------------------------------------------------------------
 // Scheduler::~Scheduler

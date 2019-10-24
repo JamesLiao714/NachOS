@@ -476,4 +476,31 @@ Thread::SelfTest()
     u->Fork((VoidFunctionPtr) SimpleThread, (void *) 3);	
     //SimpleThread(0);
 }
+void
+threadBody() {
+    Thread *thread = kernel->currentThread;
+    while (thread->getBurstTime() > 0) {
+        thread->setBurstTime(thread->getBurstTime() - 1);
+        kernel->interrupt->OneTick();
+        printf("%s: remaining %d\n", kernel->currentThread->getName(), kernel->currentThread->getBurstTime());
+    }
+}
+
+void
+Thread::SchedulingTest()
+{
+    const int thread_num = 4;
+    char *name[thread_num] = {"A", "B", "C", "D"};
+    int thread_priority[thread_num] = {5, 1, 3, 2};
+    int thread_burst[thread_num] = {3, 9, 7, 3};
+    
+    Thread *t;
+    for (int i = 0; i < thread_num; i ++) {
+        t = new Thread(name[i]);
+        t->setPriority(thread_priority[i]);
+        t->setBurstTime(thread_burst[i]);
+        t->Fork((VoidFunctionPtr) threadBody, (void *)NULL);
+    }
+    kernel->currentThread->Yield();
+}
 
