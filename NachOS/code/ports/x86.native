@@ -1,4 +1,0 @@
-# CPU = x86, OS = run Nachos native, compile on FreeBSD
-HOST = -Dx86 -DNATIVE
-CPP=/usr/bin/cpp
-DISASM = disasm

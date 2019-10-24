@@ -1,3 +1,0 @@
-# CPU = x86, OS = DOS (Windows95 or Windows NT)
-HOST = -Dx86 -DDOS
-DISASM = disasm

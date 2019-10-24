@@ -1,2 +1,0 @@
-# DEC Alphas, OS = OSF
-HOST = -DALPHA -DOSF
