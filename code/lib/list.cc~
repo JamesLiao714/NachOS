@@ -33,6 +33,7 @@ ListElement<T>::ListElement(T itm, int k)
      key = k;
 }
 
+template <class T>
 ListElement<T>::ListElement(T itm)
 {
 	item = itm;

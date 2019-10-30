@@ -41,15 +41,12 @@ Thread::Thread(char* threadName)
     stackTop = NULL;
 
     stack = NULL;
-    int timer1 = 0;
+    
     status = JUST_CREATED;
-    burst = (rand ()%500);    //set隨機從500個中取樣
-    timer1++;
-    timer = timer1;
- 
+    burst = 0;    //set隨機從500個中取樣
     priority = (rand()%50);
-    bursttime = (rand()%50);   
-
+    
+    
     Thread_Time = 0;          // Nachos may run other unknown threads , we set it to zero so that there is no problem to run SJF scheduling.
 
     for (int i = 0; i < MachineStateSize; i++) {
@@ -76,9 +73,10 @@ Thread::Thread(char* threadName, int t)
     stackTop = NULL;
     stack = NULL; 
     priority = (rand()%50); //randomly create prio-num
-    
-    Thread_Time = t; // prevent Nachos from running unkown vthreads
     status = JUST_CREATED;
+    burst = t;
+    Thread_Time = t; // prevent Nachos from running unkown vthreads
+    
     for (int i = 0; i < MachineStateSize; i++) {
 	machineState[i] = NULL;		// not strictly necessary, since
 					// new thread ignores contents 
@@ -456,7 +454,8 @@ SimpleThread(int which)
     
     for (num = 0; num < 5; num++) {
 	cout << "*** thread " << which << " looped " << num << " times\n";
-        kernel->currentThread->Yield();
+	
+   	//kernel->currentThread->Yield();
     }
 }
 
@@ -469,15 +468,15 @@ SimpleThread(int which)
 void
 Thread::SelfTest()
 {
-    DEBUG(dbgThread, "Entering Thread::SelfTest");
+   DEBUG(dbgThread, "Entering Thread::SelfTest");
+   
+   Thread *t = new Thread("forked thread1", 100);
+   Thread *s = new Thread("forked thread2", 60);
+   //Thread *u = new Thread("forked thread3", 900);
 
-    Thread *t = new Thread("forked thread1", 1000);
-    Thread *s = new Thread("forked thread2",1);
-    Thread *u = new Thread("forked thread3", 900);
-
-    t->Fork((VoidFunctionPtr) SimpleThread, (void *) 1);
-    s->Fork((VoidFunctionPtr) SimpleThread, (void *) 2);
-    u->Fork((VoidFunctionPtr) SimpleThread, (void *) 3);	
-    //SimpleThread(0);
+   t->Fork((VoidFunctionPtr) SimpleThread, (void *) 1);
+   s->Fork((VoidFunctionPtr) SimpleThread, (void *) 2);
+   //u->Fork((VoidFunctionPtr) SimpleThread, (void *) 3);
+        //SimpleThread(0)
 }
 

@@ -90,16 +90,13 @@ class Thread {
     int timer;
 
     int burst;
-
+    void setTime(int a){burst=burst-a;}
     int getburst()
     {
               return burst;
 
     }    //定義一個執行時間的函式
-    int getid()
-    {
-              return timer;
-    }  
+    
     int  getBurstTime(){return bursttime;};
     Thread(char* debugName);		// initialize a Thread 
     Thread(char* debugName, int t);
@@ -127,7 +124,7 @@ class Thread {
     int getTimeLeft(){return Thread_Time;}
   private:
     // some of the private data for this class is listed above
-    int Thread_Time;
+    int Thread_Time = 0;
     int *stack; 	 	// Bottom of the stack 
 				// NULL if this is the main thread
 				// (If NULL, don't deallocate stack)

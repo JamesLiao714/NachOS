@@ -24,7 +24,7 @@
 #include "main.h"
 int cmpSJF(Thread* thd1,Thread* thd2)
 {
-   if(thd1->getBurstTime () < thd2->getBurstTime())
+   if(thd1->getTimeLeft() < thd2->getTimeLeft())
          return -1;
 
     else
@@ -61,19 +61,19 @@ Scheduler::Scheduler(SchedulerType type)
 	switch(schedulerType)
 	{
 		case Priority:
-			cout <<"type priority =======" <<endl; 
+			cout <<"type priority" <<endl; 
 			readyList = new SortedList<Thread *>(cmpPriority);
 			break;
 		case SJF:
-			cout << "type SJF===========" <<endl;
+			cout << "type: SJF" <<endl;
 			readyList = new SortedList<Thread *>(cmpSJF);
 			break;
 		case SRTF:
-			cout << "type SRTF==========" <<endl;
+			cout << "type SRTF" <<endl;
 			readyList = new SortedList<Thread *>(cmpSRTF);
 			break;
 		case FCFS:
-			cout << "type FCFS==========" <<endl;
+			cout << "type FCFS" <<endl;
 			readyList = new SortedList<Thread *>(cmpFCFS);
 			break;
 		default:
@@ -119,14 +119,16 @@ Scheduler::ReadyToRun (Thread *thread)
 	  cout << "Thread's name: " << thread->getName()<< "priority: ->" <<thread->getPriority()<<endl;
 	  break;
 	case SJF:
-	    readyList->Insert(thread);    //將最低的行程插入到Queue的最前面
-	    cout<<" Thread's name: "<<thread->getName()<< " BurstTime: -> "<<thread->getBurstTime()<<endl;  //印出thread 的名稱和thread SJF的值 
+	    readyList-> Insert(thread);    //將最低的行程插入到Queue的最前面
+	  // cout << thread -> getTimeLeft() <<endl;
+	   // cout<<" Thread's name: "<<thread->getName()<< " BurstTime: -> "<<thread->getTimeLeft() <<endl;  //印出thread 的名稱和thread SJF的值 
 	    break;
 	case SRTF:
-	   //readyList->Insert(thread);
-	   cout <<"Thread name：" <<thread->getid()<<"      BurstTime :"<<thread->getburst()<<"\n"; 
+	   readyList->Insert(thread);
+	   cout <<"ready queue first Thread name：" <<thread->getName()<<"  BurstTime:"<<thread->getburst()<<"\n";
+	   break;
 	default:
-	     readyList->(thread); 
+	     readyList->Insert(thread); 
 	     break;
     }
 }
@@ -175,16 +177,17 @@ Scheduler::Run (Thread *nextThread, bool finishing)
     switch(schedulerType)
     {
 	case Priority: 
-	 cout << "current thread priority: " << oldThread->getPriority() <<"next thread priority: " << nextThread->getPriority()<<endl;
+	 cout << "current thread priority: " << oldThread->getPriority() <<" next thread priority: " << nextThread->getPriority()<<endl;
 	  break;
 	case SJF:
-	  cout << "current Thread BurstTime: " <<oldThread->getBurstTime()<<"next Thread BurstTime-> "<<nextThread->getBurstTime()<<endl;  
+	  //cout << "current Thread BurstTime: " <<oldThread->getBurstTime()<<"  Next Thread BurstTime-> "<<nextThread->getBurstTime()<<endl;  
 	    break;
 	case SRTF:
-	   oldThread->burst -= 10;    //主要負責存放計算新thread的burst time每次burst time為10
-    	   cout << "目前Thread 的BurstTime 值" <<oldThread->getid() << " 下一個將要執行Thread 的BurstTime 值"<<nextThread->getid()<<endl; 
+	   oldThread->setTime(20);   //oldthreadtime - timetick
+    	   //cout << "current Thread BurstTime ->" << oldThread->getburst() << "  Next Thread BurstTime -> "<<nextThread->getburst()<<endl;
+	   break; 
 	default:
-	     cout <<"running............."<<endl;
+	    // cout <<"running............."<<endl;
 	     break;
     }
     
