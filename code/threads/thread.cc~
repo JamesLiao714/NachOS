@@ -43,10 +43,10 @@ Thread::Thread(char* threadName)
     stack = NULL;
     
     status = JUST_CREATED;
-    burst = (rand ()%100);    //set隨機從500個中取樣
+    burst = rand() % 1000+1;    //set隨機從500個中取樣
     priority = (rand()%50);
     
-    
+    cout << "new thread: " << thread->getName() << " burst time: " << burst <<endl;
     Thread_Time = 0;          // Nachos may run other unknown threads , we set it to zero so that there is no problem to run SJF scheduling.
 
     for (int i = 0; i < MachineStateSize; i++) {
@@ -76,7 +76,7 @@ Thread::Thread(char* threadName, int t)
     status = JUST_CREATED;
     burst = t;
     Thread_Time = t; // prevent Nachos from running unkown vthreads
-    
+    cout << "new thread: " << this->getName() << " burst time: " << burst <<endl;
     for (int i = 0; i < MachineStateSize; i++) {
 	machineState[i] = NULL;		// not strictly necessary, since
 					// new thread ignores contents 
@@ -472,11 +472,11 @@ Thread::SelfTest()
    
    Thread *t = new Thread("forked thread1", 100);
    Thread *s = new Thread("forked thread2", 60);
-   //Thread *u = new Thread("forked thread3", 900);
+   Thread *u = new Thread("forked thread3", 900);
 
    t->Fork((VoidFunctionPtr) SimpleThread, (void *) 1);
    s->Fork((VoidFunctionPtr) SimpleThread, (void *) 2);
-   //u->Fork((VoidFunctionPtr) SimpleThread, (void *) 3);
+   u->Fork((VoidFunctionPtr) SimpleThread, (void *) 3);
         //SimpleThread(0)
 }
 

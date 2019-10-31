@@ -125,7 +125,7 @@ Scheduler::ReadyToRun (Thread *thread)
 	    break;
 	case SRTF:
 	   readyList->Insert(thread);
-	   cout <<"ready queue first Thread name：" <<thread->getName()<<"  BurstTime:"<<thread->getburst()<<"\n";
+	   //cout <<"ready queue first Thread name：" <<thread->getName()<<"  BurstTime:"<<thread->getburst()<<"\n";
 	   break;
 	default:
 	     readyList->Insert(thread); 

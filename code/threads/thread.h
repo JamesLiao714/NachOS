@@ -106,7 +106,7 @@ class Thread {
 					// is called
 
     // basic thread operations
-
+    int st;//scehduler type
     void Fork(VoidFunctionPtr func, void *arg); 
     				// Make thread run (*func)(arg)
     void Yield();  		// Relinquish the CPU if any 

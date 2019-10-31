@@ -48,7 +48,7 @@ class Scheduler {
         void SortedInsert(void *item , int sortKey);   // 宣告作insertion sort之SortedInsert( ) 的function
 
  
-
+     SchedulerType getSchedulerType() {return schedulerType;}
     void getTimeLeft(int quantum);    // 宣告getTimeLeft的function
     // SelfTest for scheduler is implemented in class Thread
     

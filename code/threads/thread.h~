@@ -90,7 +90,7 @@ class Thread {
     int timer;
 
     int burst;
-    void setTime(burst=burst-a;}
+    void setTime(int a){burst=burst-a;}
     int getburst()
     {
               return burst;
