@@ -22,9 +22,10 @@
 #include "debug.h"
 #include "scheduler.h"
 #include "main.h"
+//hw2 comparison 
 int cmpSJF(Thread* thd1,Thread* thd2)
 {
-   if(thd1->getTimeLeft() < thd2->getTimeLeft())
+   if(thd1->getBurstTime() < thd2->getBurstTime())
          return -1;
 
     else
@@ -39,7 +40,7 @@ int cmpPriority(Thread* thd1, Thread* thd2)
 }
 int cmpSRTF(Thread* thd1,Thread* thd2)       //一開始宣告global scope
 {
-      if(thd1->getburst() < thd2->getburst())
+      if(thd1->getBurstTime() < thd2->getBurstTime())
          return -1;
       else
          return 0;
@@ -48,6 +49,7 @@ int cmpFCFS(Thread* thd1, Thread* thd2)
 {
     return 0;
 }
+//hw2 end
 //----------------------------------------------------------------------
 // Scheduler::Scheduler
 // 	Initialize the list of ready but not running threads.
@@ -58,28 +60,30 @@ Scheduler::Scheduler(SchedulerType type)
 {
 //	schedulerType = type;
 	schedulerType = type;
+	//hw2
 	switch(schedulerType)
 	{
 		case Priority:
-			cout <<"type priority" <<endl; 
+			cout <<"Type: priority" <<endl; 
 			readyList = new SortedList<Thread *>(cmpPriority);
 			break;
 		case SJF:
-			cout << "type: SJF" <<endl;
+			cout << "Type: SJF" <<endl;
 			readyList = new SortedList<Thread *>(cmpSJF);
 			break;
 		case SRTF:
-			cout << "type SRTF" <<endl;
+			cout << "Type: SRTF" <<endl;
 			readyList = new SortedList<Thread *>(cmpSRTF);
 			break;
 		case FCFS:
-			cout << "type FCFS" <<endl;
+			cout << "Type: FCFS" <<endl;
 			readyList = new SortedList<Thread *>(cmpFCFS);
 			break;
 		default:
-			//cout << "please enter para" <<endl;
+			//cout << "Type: multi pro" <<endl;
 			break;
 	} 
+	//hw end
 	toBeDestroyed = NULL;
 } 
 
@@ -112,20 +116,20 @@ Scheduler::ReadyToRun (Thread *thread)
     DEBUG(dbgThread, "Putting thread on ready list: " << thread->getName());
 
     thread->setStatus(READY); 
+    //hw2 add
     switch(schedulerType)
     {
 	case Priority:
 	  readyList->Insert(thread);
-	  cout << "Thread's name: " << thread->getName()<< "priority: ->" <<thread->getPriority()<<endl;
+	  cout << "Thread's name: " << thread->getName()<< " priority: " <<thread->getPriority()<<endl;
 	  break;
 	case SJF:
 	    readyList-> Insert(thread);    //將最低的行程插入到Queue的最前面
-	  // cout << thread -> getTimeLeft() <<endl;
-	   // cout<<" Thread's name: "<<thread->getName()<< " BurstTime: -> "<<thread->getTimeLeft() <<endl;  //印出thread 的名稱和thread SJF的值 
+	    cout <<"thread= "<<thread->getName()<<"burst time: "<<thread->getBurstTime()<<endl;   
 	    break;
 	case SRTF:
 	   readyList->Insert(thread);
-	   cout <<"ready queue first Thread name：" <<thread->getName()<<"  BurstTime:"<<thread->getburst()<<"\n";
+	   cout <<"thread= "<<thread->getnum()<<"burst time: "<<thread->getBurstTime()<<endl;  
 	   break;
 	default:
 	     readyList->Insert(thread); 
@@ -174,17 +178,18 @@ void
 Scheduler::Run (Thread *nextThread, bool finishing)
 {
     Thread *oldThread = kernel->currentThread;
+    //hw2
     switch(schedulerType)
     {
 	case Priority: 
-	 cout << "current thread priority: " << oldThread->getPriority() <<" next thread priority: " << nextThread->getPriority()<<endl;
+	 cout << "current thread priority: " << oldThread->getPriority() <<" Next thread priority: " << nextThread->getPriority()<<endl;
 	  break;
 	case SJF:
 	  //cout << "current Thread BurstTime: " <<oldThread->getBurstTime()<<"  Next Thread BurstTime-> "<<nextThread->getBurstTime()<<endl;  
 	    break;
 	case SRTF:
-	   oldThread->setTime(20);   //oldthreadtime - timetick
-    	   //cout << "current Thread BurstTime ->" << oldThread->getburst() << "  Next Thread BurstTime -> "<<nextThread->getburst()<<endl;
+	   oldThread->setTime(30);   //oldthreadtime - timetick
+    	   cout << "Current Thread: " <<oldThread->getnum() << "  Next Thread: "<<nextThread->getnum()<<endl;
 	   break; 
 	default:
 	    // cout <<"running............."<<endl;

@@ -24,7 +24,7 @@
 
 // this is put at the top of the execution stack, for detecting stack overflows
 const int STACK_FENCEPOST = 0xdedbeef;
-
+static int num1 = 0;
 //----------------------------------------------------------------------
 // Thread::Thread
 // 	Initialize a thread control block, so that we can then call
@@ -43,14 +43,16 @@ Thread::Thread(char* threadName)
     stack = NULL;
     
     status = JUST_CREATED;
-    burst = rand() % 1000+1;    //set隨機從500個中取樣
-    priority = (rand()%50);
+    //hw2
     
-    cout << "new thread: " << thread->getName() << " burst time: " << burst <<endl;
-    Thread_Time = 0;          // Nachos may run other unknown threads , we set it to zero so that there is no problem to run SJF scheduling.
+    bursttime = rand() % 1000 + 1;    //set隨機從1000個中取樣
+    priority = (rand()%50);
+    num = num1 + 1;
+    //cout << "new thread: " << this->getName() << " burst time: " << burst <<endl;
+    //bursttime = 0;          // Nachos may run other unknown threads , we set it to zero so that there is no problem to run SJF scheduling.
+    //hw2 end
 
     for (int i = 0; i < MachineStateSize; i++) {
-
       machineState[i] = NULL;            // not strictly necessary, since
 
                                 // new thread ignores contents
@@ -66,22 +68,25 @@ Thread::Thread(char* threadName)
 #endif
 }
 
-//
+//hw2 
 Thread::Thread(char* threadName, int t)
 {
     name = threadName;
     stackTop = NULL;
     stack = NULL; 
-    priority = (rand()%50); //randomly create prio-num
+
+    priority = (rand()%50);//randomly create prio-num
     status = JUST_CREATED;
-    burst = t;
-    Thread_Time = t; // prevent Nachos from running unkown vthreads
-    cout << "new thread: " << this->getName() << " burst time: " << burst <<endl;
+    bursttime = t;
+    num = num1++;
+    cout << "New thread: " << this->getName() << " burst time: " << bursttime <<endl;
     for (int i = 0; i < MachineStateSize; i++) {
 	machineState[i] = NULL;		// not strictly necessary, since
 					// new thread ignores contents 
 					// of machine registers
-    }
+}
+//hw2 end
+ 
 #ifdef USER_PROGRAM
     space = NULL;
 #endif
