@@ -115,7 +115,7 @@ AddrSpace::~AddrSpace()
                         // to leave room for the stack
     numPages = divRoundUp(size, PageSize);
 //	cout << "number of pages of " << fileName<< " is "<< numPages << endl;
-// morris add
+// Ｊames add
     pageTable = new TranslationEntry[numPages];
     for(unsigned int i = 0, j = 0; i < numPages; i++) {
         pageTable[i].virtualPage = i;
@@ -128,7 +128,7 @@ AddrSpace::~AddrSpace()
         pageTable[i].dirty = false;
         pageTable[i].readOnly = false;
     }
-// end morris add
+// end James add
     size = numPages * PageSize;
     ASSERT(numPages <= NumPhysPages);		// check we're not trying
                         // to run anything too big --
@@ -139,20 +139,20 @@ AddrSpace::~AddrSpace()
     if (noffH.code.size > 0) {
         DEBUG(dbgAddr, "Initializing code segment.");
     DEBUG(dbgAddr, noffH.code.virtualAddr << ", " << noffH.code.size);
-// morris add
+// James add
         	executable->ReadAt(
         &(kernel->machine->mainMemory[pageTable[noffH.code.virtualAddr/PageSize].physicalPage * PageSize + (noffH.code.virtualAddr%PageSize)]), 
             noffH.code.size, noffH.code.inFileAddr);
-// end morris add
+// end james add
     }
     if (noffH.initData.size > 0) {
         DEBUG(dbgAddr, "Initializing data segment.");
     DEBUG(dbgAddr, noffH.initData.virtualAddr << ", " << noffH.initData.size);
-// morris add
+// jaems add
         executable->ReadAt(
         &(kernel->machine->mainMemory[pageTable[noffH.initData.virtualAddr/PageSize].physicalPage * PageSize + (noffH.code.virtualAddr%PageSize)]),
             noffH.initData.size, noffH.initData.inFileAddr);
-// end morris add
+// end james add
     }
     delete executable;			// close file
     return TRUE;			// success
