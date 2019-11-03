@@ -48,6 +48,7 @@ Thread::Thread(char* threadName)
     bursttime = rand() % 1000 + 1;    //set隨機從1000個中取樣
     priority = (rand()%50);
     num = num1 + 1;
+    num1++;
     //cout << "new thread: " << this->getName() << " burst time: " << burst <<endl;
     //bursttime = 0;          // Nachos may run other unknown threads , we set it to zero so that there is no problem to run SJF scheduling.
     //hw2 end
@@ -78,7 +79,8 @@ Thread::Thread(char* threadName, int t)
     priority = (rand()%50);//randomly create prio-num
     status = JUST_CREATED;
     bursttime = t;
-    num = num1++;
+    num = num1+1;
+    num1++;
     cout << "New thread: " << this->getName() << " burst time: " << bursttime <<endl;
     for (int i = 0; i < MachineStateSize; i++) {
 	machineState[i] = NULL;		// not strictly necessary, since
