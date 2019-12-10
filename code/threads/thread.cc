@@ -24,7 +24,7 @@
 
 // this is put at the top of the execution stack, for detecting stack overflows
 const int STACK_FENCEPOST = 0xdedbeef;
-static int num1 = 0;
+
 //----------------------------------------------------------------------
 // Thread::Thread
 // 	Initialize a thread control block, so that we can then call
@@ -35,60 +35,15 @@ static int num1 = 0;
 
 Thread::Thread(char* threadName)
 {
-
     name = threadName;
-
     stackTop = NULL;
-
     stack = NULL;
-    
     status = JUST_CREATED;
-    //hw2
-    
-    bursttime = rand() % 1000 + 1;    //set隨機從1000個中取樣
-    priority = (rand()%50);
-    num = num1 + 1;
-    num1++;
-    //cout << "new thread: " << this->getName() << " burst time: " << burst <<endl;
-    //bursttime = 0;          // Nachos may run other unknown threads , we set it to zero so that there is no problem to run SJF scheduling.
-    //hw2 end
-
-    for (int i = 0; i < MachineStateSize; i++) {
-      machineState[i] = NULL;            // not strictly necessary, since
-
-                                // new thread ignores contents
-
-                                // of machine registers
-
-    }
-
-#ifdef USER_PROGRAM
-
-    space = NULL;
-
-#endif
-}
-
-//hw2 
-Thread::Thread(char* threadName, int t)
-{
-    name = threadName;
-    stackTop = NULL;
-    stack = NULL; 
-
-    priority = (rand()%50);//randomly create prio-num
-    status = JUST_CREATED;
-    bursttime = t;
-    num = num1+1;
-    num1++;
-    cout << "New thread: " << this->getName() << " burst time: " << bursttime <<endl;
     for (int i = 0; i < MachineStateSize; i++) {
 	machineState[i] = NULL;		// not strictly necessary, since
 					// new thread ignores contents 
 					// of machine registers
-}
-//hw2 end
- 
+    }
 #ifdef USER_PROGRAM
     space = NULL;
 #endif
@@ -455,15 +410,15 @@ Thread::RestoreUserState()
 //----------------------------------------------------------------------
 
 static void
-SimpleThread(int which)
+SimpleThread()
 {
-    int num;
-    
-    for (num = 0; num < 5; num++) {
-	cout << "*** thread " << which << " looped " << num << " times\n";
-	
-   	kernel->currentThread->Yield();
-    }
+    Thread *thread = kernel->currentThread;
+    while (thread->getBurstTime() > 0) {
+        thread->setBurstTime(thread->getBurstTime() - 1);
+	printf("%s: %d\n", kernel->currentThread->getName(), kernel->currentThread->getBurstTime());
+        //kernel->currentThread->Yield();
+	kernel->interrupt->OneTick();
+    }    
 }
 
 //----------------------------------------------------------------------
@@ -475,15 +430,20 @@ SimpleThread(int which)
 void
 Thread::SelfTest()
 {
-   DEBUG(dbgThread, "Entering Thread::SelfTest");
-   
-   Thread *t = new Thread("forked thread1", 100);
-   Thread *s = new Thread("forked thread2", 60);
-   Thread *u = new Thread("forked thread3", 900);
+    DEBUG(dbgThread, "Entering Thread::SelfTest");
+    
+    const int number 	 = 3;
+    char *name[number] 	 = {"A", "B", "C"};
+    int burst[number] 	 = {3, 10, 4};
+    int priority[number] = {4, 5, 3};
 
-   t->Fork((VoidFunctionPtr) SimpleThread, (void *) 1);
-   s->Fork((VoidFunctionPtr) SimpleThread, (void *) 2);
-   u->Fork((VoidFunctionPtr) SimpleThread, (void *) 3);
-        //SimpleThread(0)
+    Thread *t;
+    for (int i = 0; i < number; i ++) {
+        t = new Thread(name[i]);
+        t->setPriority(priority[i]);
+        t->setBurstTime(burst[i]);
+        t->Fork((VoidFunctionPtr) SimpleThread, (void *)NULL);
+    }
+    kernel->currentThread->Yield();
 }
 

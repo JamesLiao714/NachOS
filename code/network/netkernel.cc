@@ -49,17 +49,14 @@ NetKernel::NetKernel(int argc, char **argv) : UserProgKernel(argc, argv)
 //----------------------------------------------------------------------
 
 void
-NetKernel::Initialize(SchedulerType type)
+NetKernel::Initialize()
 {
-    UserProgKernel::Initialize(type);	// init other kernel data structs
+    UserProgKernel::Initialize();	// init other kernel data structs
 
     postOfficeIn = new PostOfficeInput(10);
     postOfficeOut = new PostOfficeOutput(reliability, 10);
 }
-void 
-NetKernel::Initialize() {
-    Initialize(FCFS);
-}
+
 //----------------------------------------------------------------------
 // NetKernel::~NetKernel
 // 	Nachos is halting.  De-allocate global data structures.

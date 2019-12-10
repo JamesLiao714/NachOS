@@ -2,6 +2,7 @@
 //	Global variables for the Nachos kernel, for the assignment
 //	supporting running user programs.
 //
+
 //	The kernel supporting user programs is a version of the 
 //	basic multithreaded kernel.
 //
@@ -11,6 +12,7 @@
 
 #ifndef USERKERNEL_H  
 #define USERKERNEL_H
+
 
 #include "kernel.h"
 #include "filesys.h"
@@ -24,22 +26,23 @@ class UserProgKernel : public ThreadedKernel {
     ~UserProgKernel();		// deallocate the kernel
 
     void Initialize();		// initialize the kernel 
-    void Initialize(SchedulerType type);
+
     void Run();			// do kernel stuff 
 
     void SelfTest();		// test whether kernel is working
-
+    
+    SynchDisk *vm_Disk;     //to save the page which the main memoey don't have enough memory to save
 // These are public for notational convenience.
     Machine *machine;
     FileSystem *fileSystem;
-
+    bool debugUserProg;
 #ifdef FILESYS
     SynchDisk *synchDisk;
 #endif // FILESYS
-
+   
   private:
-    bool debugUserProg;		// single step user program
-	Thread* t[10];
+    	Thread* t[10];	// single step user program
+	
 	char*	execfile[10];
 	int	execfileNum;
 };

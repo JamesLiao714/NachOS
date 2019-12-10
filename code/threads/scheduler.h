@@ -12,10 +12,6 @@
 #include "copyright.h"
 #include "list.h"
 #include "thread.h"
-#include "utility.h"
-#include "callback.h"
-#include "timer.h"
-#include <list>
 
 // The following class defines the scheduler/dispatcher abstraction -- 
 // the data structures and operations needed to keep track of which 
@@ -24,17 +20,16 @@
 enum SchedulerType {
         RR,     // Round Robin
         SJF,
-	SRTF,
-	FCFS,
-        Priority
+        Priority,
+	FIFO
 };
 
 class Scheduler {
   public:
-	Scheduler();
-	Scheduler(SchedulerType type);		// Initialize list of ready threads 
+	Scheduler();		// Initialize list of ready threads 
+	Scheduler(SchedulerType type);
 	~Scheduler();				// De-allocate ready list
-	
+
 	void ReadyToRun(Thread* thread);	
     					// Thread can be dispatched.
 	Thread* FindNextToRun();	// Dequeue first thread on the ready 
@@ -44,39 +39,18 @@ class Scheduler {
 	void CheckToBeDestroyed();	// Check if thread that had been
     					// running needs to be deleted
 	void Print();			// Print contents of ready list
+    	
+    	void setSchedulerType(SchedulerType t) {schedulerType = t;}
+	SchedulerType getSchedulerType() {return schedulerType;}
 
-        void SortedInsert(void *item , int sortKey);   // 宣告作insertion sort之SortedInsert( ) 的function
-
- 
-     SchedulerType getSchedulerType() {return schedulerType;}
-    void getTimeLeft(int quantum);    // 宣告getTimeLeft的function
     // SelfTest for scheduler is implemented in class Thread
     
   private:
 	SchedulerType schedulerType;
-	SortedList<Thread*>*readyList; //List->SortedLi
-	// queue of threads that are ready to run,
+	List<Thread *> *readyList;	// queue of threads that are ready to run,
 					// but not running
 	Thread *toBeDestroyed;		// finishing thread to be destroyed
     					// by the next thread that runs
-};
-
-class sleepList {
-    public:
-        sleepList():_current_interrupt(0) {};
-        void PutToSleep(Thread *t, int x);
-    bool PutToReady();
-    bool IsEmpty();
-    private:
-        class sleepThread {
-            public:
-                sleepThread(Thread* t, int x):
-                    sleeper(t), when(x) {};
-                Thread* sleeper;
-                int when;
-        };
-    int _current_interrupt;
-    std::list<sleepThread> _threadlist;
 };
 
 #endif // SCHEDULER_H

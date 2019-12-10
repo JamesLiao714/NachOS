@@ -46,28 +46,22 @@ Alarm::Alarm(bool doRandom)
 //	interrupts.  In this case, we can safely halt.
 //----------------------------------------------------------------------
 
-void Alarm::CallBack() {
+void 
+Alarm::CallBack() 
+{
     Interrupt *interrupt = kernel->interrupt;
     MachineStatus status = interrupt->getStatus();
-    bool woken = _sleepList.PutToReady();
-    //如果沒有程式需要計數了，就把interrupt遮蔽掉
-    if (status == IdleMode && !woken && _sleepList.IsEmpty()) {// is it time to quit?
+    
+    kernel->currentThread->setPriority(kernel->currentThread->getPriority() - 1);
+    if (status == IdleMode) {	// is it time to quit?
         if (!interrupt->AnyFutureInterrupts()) {
-            timer->Disable();   // shut down the timer
-        }
-    } else {                    // there's someone to preempt
-	if(kernel->scheduler->getSchedulerType() == SRTF)
-        	interrupt->YieldOnReturn();
+	    timer->Disable();	// turn off the timer
+	}
+    } else {			// there's someone to preempt
+	if(kernel->scheduler->getSchedulerType() == RR ||
+            kernel->scheduler->getSchedulerType() == Priority ) {
+		interrupt->YieldOnReturn();
+	}
     }
-}
-
-void Alarm::WaitUntil(int x) {
-    //關中斷
-    IntStatus oldLevel = kernel->interrupt->SetLevel(IntOff); 
-    Thread* t = kernel->currentThread;
-    cout << "proceesing Alarm::WaitUntil --- sleeping " << endl;
-    _sleepList.PutToSleep(t, x); //scheduler
-    //開中斷
-    kernel->interrupt->SetLevel(oldLevel);
 }
 

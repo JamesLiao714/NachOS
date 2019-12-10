@@ -28,10 +28,8 @@ template <class T>
 class ListElement {
   public:
     ListElement(T itm); 	// initialize a list element
-    ListElement(T itm, int k);
     ListElement *next;	     	// next element on list, NULL if this is last
     T item; 	   	     	// item on the list
-    int key;
 };
 
 // The following class defines a "list" -- a singly linked list of
@@ -71,7 +69,7 @@ class List {
 				// has this list been corrupted?
     void SelfTest(T *p, int numEntries);
 				// verify module is working
-    void SortedInsert(T item, int sortKey);
+
   protected:
     ListElement<T> *first;  	// Head of the list, NULL if list is empty
     ListElement<T> *last;	// Last element of list

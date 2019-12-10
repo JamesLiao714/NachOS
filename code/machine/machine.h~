@@ -97,6 +97,10 @@ class Machine {
     Machine(bool debug);	// Initialize the simulation of the hardware
 				// for running user programs
     ~Machine();			// De-allocate the data structures
+//hw3
+    List<int> *FIFOqueue;
+    List<int> *LRUstack;
+//hw3
 // Routines callable by the Nachos kernel
     void Run();	 		// Run a user program
 

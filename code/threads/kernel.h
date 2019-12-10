@@ -26,7 +26,7 @@ class ThreadedKernel {
     void Initialize(); 		// initialize the kernel -- separated
 				// from constructor because 
 				// refers to "kernel" as a global
-    void Initialize(SchedulerType type);
+
     void Run();			// do kernel stuff
 				    
     void SelfTest();		// test whether kernel is working
@@ -41,9 +41,10 @@ class ThreadedKernel {
     Interrupt *interrupt;	// interrupt status
     Statistics *stats;		// performance metrics
     Alarm *alarm;		// the software alarm clock    
-    //SchedulerType type; //
   private:
     bool randomSlice;		// enable pseudo-random time slicing
+    SchedulerType type;
+    
 };
 
 

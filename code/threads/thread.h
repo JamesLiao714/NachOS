@@ -83,27 +83,15 @@ class Thread {
     int *stackTop;			 // the current stack pointer
     void *machineState[MachineStateSize];  // all registers except for stackTop
 
-    int bursttime;//hw2
-
   public:
     Thread(char* debugName);		// initialize a Thread 
-
-    //hw2
-    int num; 
-    int getnum(){return num;}   
-    Thread(char* debugName, int t); //constructor for selftest()
-    int priority; //used to save priority
-    int getPriority(){return priority;} //return priority
-    void setTime(int a){bursttime=bursttime-a;}//srtf brusttime substractor
-    int  getBurstTime(){return bursttime;}; //return bursttime
-    //
     ~Thread(); 				// deallocate a Thread
 					// NOTE -- thread being deleted
 					// must not be running when delete 
 					// is called
 
     // basic thread operations
-    int st;//scehduler type
+
     void Fork(VoidFunctionPtr func, void *arg); 
     				// Make thread run (*func)(arg)
     void Yield();  		// Relinquish the CPU if any 
@@ -115,18 +103,24 @@ class Thread {
     
     void CheckOverflow();   	// Check if thread stack has overflowed
     void setStatus(ThreadStatus st) { status = st; }
+    void setBurstTime(int t)	{burstTime = t;}
+    int getBurstTime()		{return burstTime;}
+    void setPriority(int t)	{priority = t;}
+    int getPriority()		{return priority;}
     char* getName() { return (name); }
     void Print() { cout << name; }
     void SelfTest();		// test whether thread impl is working
-    //int getTimeLeft(){return Thread_Time;}
+
   private:
     // some of the private data for this class is listed above
+    
     int *stack; 	 	// Bottom of the stack 
 				// NULL if this is the main thread
 				// (If NULL, don't deallocate stack)
     ThreadStatus status;	// ready, running or blocked
     char* name;
-
+    int burstTime;
+    int priority;	
     void StackAllocate(VoidFunctionPtr func, void *arg);
     				// Allocate a stack for thread.
 				// Used internally by Fork()

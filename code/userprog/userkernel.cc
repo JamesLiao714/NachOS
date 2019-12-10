@@ -1,6 +1,7 @@
 // userkernel.cc 
 //	Initialization and cleanup routines for the version of the
 //	Nachos kernel that supports running user programs.
+
 //
 // Copyright (c) 1992-1996 The Regents of the University of California.
 // All rights reserved.  See copyright.h for copyright notice and limitation 
@@ -21,7 +22,8 @@ UserProgKernel::UserProgKernel(int argc, char **argv)
 		: ThreadedKernel(argc, argv)
 {
     debugUserProg = FALSE;
-	execfileNum=0;
+	
+    execfileNum=0;
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-s") == 0) {
 	    debugUserProg = TRUE;
@@ -52,21 +54,19 @@ UserProgKernel::UserProgKernel(int argc, char **argv)
 //----------------------------------------------------------------------
 
 void
-UserProgKernel::Initialize(SchedulerType type)
+UserProgKernel::Initialize()
 {
-    ThreadedKernel::Initialize(type);	// init multithreading
+    ThreadedKernel::Initialize();	// init multithreading
 
     machine = new Machine(debugUserProg);
     fileSystem = new FileSystem();
+    vm_Disk = new SynchDisk("New Disk");//to save the page which the main memoey don't have enough memory to save
 #ifdef FILESYS
     synchDisk = new SynchDisk("New SynchDisk");
 #endif // FILESYS
+   
 }
-void
-UserProgKernel::Initialize()
-{
-    Initialize(FCFS);
-}
+
 //----------------------------------------------------------------------
 // UserProgKernel::~UserProgKernel
 // 	Nachos is halting.  De-allocate global data structures.

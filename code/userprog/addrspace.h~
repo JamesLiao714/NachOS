@@ -1,7 +1,6 @@
 // addrspace.h 
 //	Data structures to keep track of executing user programs 
 //	(address spaces).
-
 //
 //	For now, we don't keep any information about address spaces.
 //	The user level CPU state is saved and restored in the thread

@@ -24,7 +24,7 @@
 KernelType *kernel;
 Debug *debug;
 
-
+int mode = 1;
 //----------------------------------------------------------------------
 // Cleanup
 //	Delete kernel data structures; called when user hits "ctl-C".
@@ -69,51 +69,13 @@ main(int argc, char **argv)
 	} else if (strcmp(argv[i], "-z") == 0) {
             cout << copyright;
 	}
-
     }
-    SchedulerType type;
-    int f = 0;
-    if(strcmp(argv[argc-1],"-prior") == 0)
-    {
-	cout <<"=======priority======" <<endl;
-	type = Priority;
-
-	f =1;
-     }
-     else if(strcmp(argv[argc-1], "-SJF") == 0)
-     {
-	cout <<"==========SJF=========" <<endl;
-	type = SJF;
-	f=1;
-     }
-     else if(strcmp(argv[argc-1], "-SRTF") == 0)
-     {
-	cout <<"==========SRTF=========" <<endl;
-	type = SRTF;
-	f=1;
-     }
-     else if(strcmp(argv[argc -1], "-FCFS") == 0)
-     {
-	cout << "==========FCFS==========" <<endl;
-	type = FCFS;
-	f=1;
-     }
-     else
-     {
-	f=0;
-     }
-     
-	
-
     debug = new Debug(debugArg);
     
     DEBUG(dbgThread, "Entering main");
 
     kernel = new KernelType(argc, argv);
-    if(f==0)
-	kernel->Initialize();
-    else
-    	kernel->Initialize(type);
+    kernel->Initialize();
     
     CallOnUserAbort(Cleanup);		// if user hits ctl-C
 

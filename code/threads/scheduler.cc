@@ -22,75 +22,47 @@
 #include "debug.h"
 #include "scheduler.h"
 #include "main.h"
-//hw2 comparison 
-int cmpSJF(Thread* thd1,Thread* thd2)
-{
-   if(thd1->getBurstTime() < thd2->getBurstTime())
-         return -1;
 
-    else
-         return 0;
+//----------------------------------------------------------------------
+// Compare function
+//----------------------------------------------------------------------
+int PriorityCompare(Thread *a, Thread *b) {
+    if(a->getPriority() == b->getPriority())
+        return 0;
+    return a->getPriority() > b->getPriority() ? 1 : -1;
 }
-int cmpPriority(Thread* thd1, Thread* thd2)
-{
-    if(thd1->getPriority()<thd2->getPriority())
-	return -1;
-    else	
-	return 0;
-}
-int cmpSRTF(Thread* thd1,Thread* thd2)       //一開始宣告global scope
-{
-      if(thd1->getBurstTime() < thd2->getBurstTime())
-         return -1;
-      else
-         return 0;
-   }
-int cmpFCFS(Thread* thd1, Thread* thd2)
-{
-    return 0;
-}
-//hw2 end
+
 //----------------------------------------------------------------------
 // Scheduler::Scheduler
 // 	Initialize the list of ready but not running threads.
 //	Initially, no ready threads.
 //----------------------------------------------------------------------
 
+Scheduler::Scheduler()
+{
+	Scheduler(RR);
+}
+
 Scheduler::Scheduler(SchedulerType type)
 {
-//	schedulerType = type;
 	schedulerType = type;
-	//hw2
-	switch(schedulerType)
-	{
-		case Priority:
-			cout <<"Type: priority" <<endl; 
-			readyList = new SortedList<Thread *>(cmpPriority);
-			break;
-		case SJF:
-			cout << "Type: SJF" <<endl;
-			readyList = new SortedList<Thread *>(cmpSJF);
-			break;
-		case SRTF:
-			cout << "Type: SRTF" <<endl;
-			readyList = new SortedList<Thread *>(cmpSRTF);
-			break;
-		case FCFS:
-			cout << "Type: FCFS" <<endl;
-			readyList = new SortedList<Thread *>(cmpFCFS);
-			break;
-		default:
-			//cout << "Type: multi pro" <<endl;
-			break;
-	} 
-	//hw end
+	switch(schedulerType) {
+    	case RR:
+        	readyList = new List<Thread *>;
+        	break;
+    	case SJF:
+		/* todo */
+        	break;
+    	case Priority:
+		readyList = new SortedList<Thread *>(PriorityCompare);
+        	break;
+    	case FIFO:
+		/* todo */
+		break;
+   	}
 	toBeDestroyed = NULL;
 } 
 
-Scheduler::Scheduler()
-{
-    Scheduler(FCFS);
-}
 //----------------------------------------------------------------------
 // Scheduler::~Scheduler
 // 	De-allocate the list of ready threads.
@@ -114,27 +86,9 @@ Scheduler::ReadyToRun (Thread *thread)
 {
     ASSERT(kernel->interrupt->getLevel() == IntOff);
     DEBUG(dbgThread, "Putting thread on ready list: " << thread->getName());
-
-    thread->setStatus(READY); 
-    //hw2 add
-    switch(schedulerType)
-    {
-	case Priority:
-	  readyList->Insert(thread);
-	  cout << "Thread's name: " << thread->getName()<< " priority: " <<thread->getPriority()<<endl;
-	  break;
-	case SJF:
-	    readyList-> Insert(thread);    //將最低的行程插入到Queue的最前面
-	    cout <<"thread= "<<thread->getName()<<"burst time: "<<thread->getBurstTime()<<endl;   
-	    break;
-	case SRTF:
-	   readyList->Insert(thread);
-	   cout <<"thread= "<<thread->getnum()<<"burst time: "<<thread->getBurstTime()<<endl;  
-	   break;
-	default:
-	     readyList->Insert(thread); 
-	     break;
-    }
+    
+    thread->setStatus(READY);
+    readyList->Append(thread);
 }
 
 //----------------------------------------------------------------------
@@ -178,24 +132,7 @@ void
 Scheduler::Run (Thread *nextThread, bool finishing)
 {
     Thread *oldThread = kernel->currentThread;
-    //hw2
-    switch(schedulerType)
-    {
-	case Priority: 
-	 cout << "current thread priority: " << oldThread->getPriority() <<" Next thread priority: " << nextThread->getPriority()<<endl;
-	  break;
-	case SJF:
-	  //cout << "current Thread BurstTime: " <<oldThread->getBurstTime()<<"  Next Thread BurstTime-> "<<nextThread->getBurstTime()<<endl;  
-	    break;
-	case SRTF:
-	   oldThread->setTime(30);   //oldthreadtime - timetick
-    	   cout << "Current Thread: " <<oldThread->getnum() << "  Next Thread: "<<nextThread->getnum()<<endl;
-	   break; 
-	default:
-	    // cout <<"running............."<<endl;
-	     break;
-    }
-    
+ 
 //	cout << "Current Thread" <<oldThread->getName() << "    Next Thread"<<nextThread->getName()<<endl;
    
     ASSERT(kernel->interrupt->getLevel() == IntOff);
@@ -274,29 +211,3 @@ Scheduler::Print()
     cout << "Ready list contents:\n";
     readyList->Apply(ThreadPrint);
 }
-
-bool sleepList::IsEmpty() {
-    return _threadlist.size() == 0;
-}
-void sleepList::PutToSleep(Thread*t, int x) {
-    ASSERT(kernel->interrupt->getLevel() == IntOff);
-    _threadlist.push_back(sleepThread(t, _current_interrupt + x)); //each increment will take 1 ms
-    t->Sleep(false);
-}
-bool sleepList::PutToReady() {
-    bool woken = false;
-    _current_interrupt ++;
-    for(std::list<sleepThread>::iterator it = _threadlist.begin();
-        it != _threadlist.end(); ) {
-        if(_current_interrupt >= it->when) {
-            woken = true;
-            cout << "sleepList::PutToReady Thread woken" << endl;
-            kernel->scheduler->ReadyToRun(it->sleeper);
-            it = _threadlist.erase(it);
-        } else {
-            it++;
-        }
-    }
-    return woken;
-}
-

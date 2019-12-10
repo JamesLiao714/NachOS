@@ -1,6 +1,7 @@
 // exception.cc 
 //	Entry point into the Nachos kernel from user programs.
 //	There are two kinds of things that can cause control to
+
 //	transfer back to here from user code:
 //
 //	syscall -- The user code explicitly requests to call a procedure
@@ -22,6 +23,7 @@
 // of liability and disclaimer of warranty provisions.
 
 #include "copyright.h"
+
 #include "main.h"
 #include "syscall.h"
 
@@ -54,7 +56,8 @@ ExceptionHandler(ExceptionType which)
 	int	type = kernel->machine->ReadRegister(2);
 	int	val;
 
-    switch (which) {
+
+     switch (which) {
 	case SyscallException:
 	    switch(type) {
 		case SC_Halt:
@@ -65,13 +68,6 @@ ExceptionHandler(ExceptionType which)
 			val=kernel->machine->ReadRegister(4);
 			cout << "Print integer:" <<val << endl;
 			return;
-		//implementation of sleep(HW1)
-		case SC_Sleep:
-			val = kernel->machine->ReadRegister(4); //read val
-			cout << "Sleep Time:" << val << "(/ms) Ready to activate - at exception.cc " << endl;
-			kernel-> alarm-> WaitUntil(val); //activation of sleep func.
-			return;
-
 /*		case SC_Exec:
 			DEBUG(dbgAddr, "Exec\n");
 			val = kernel->machine->ReadRegister(4);
